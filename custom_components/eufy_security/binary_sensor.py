@@ -3,7 +3,7 @@ import logging
 from decimal import Decimal
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.components.binary_sensor import DEVICE_CLASS_MOTION
+from homeassistant.components.binary_sensor import DEVICE_CLASS_MOTION, BinarySensorEntity
 
 from .const import DOMAIN
 from .entity import EufySecurityEntity
@@ -52,7 +52,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
     async_add_devices(entities, True)
 
 
-class EufySecurityBinarySensor(EufySecurityEntity):
+class EufySecurityBinarySensor(EufySecurityEntity, BinarySensorEntity):
     def __init__(
         self,
         coordinator: EufySecurityDataUpdateCoordinator,
@@ -73,8 +73,8 @@ class EufySecurityBinarySensor(EufySecurityEntity):
         self._device_class = device_class
 
     @property
-    def state(self):
-        return self.entity[self.key]
+    def is_on(self):
+        return bool(self.entity[self.key])
 
     @property
     def icon(self):
